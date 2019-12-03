@@ -41,8 +41,8 @@ public class Drone implements Serializable {
         try {
             vceListeners.fireVetoableChange("location", this.getLocProperty(),
                     coordinate);
-            propertySupport.firePropertyChange("location", this.getLocProperty(), coordinate);
             LOC.sum(coordinate);
+            propertySupport.firePropertyChange("location", this.getLocProperty(), coordinate);
 
         } catch (PropertyVetoException ex) {
             System.out.print("WARNING: The drone tried to escape the panel!\n");
@@ -61,15 +61,16 @@ public class Drone implements Serializable {
     
     public void takeOff(Coordinate initLoc){
         this.FLYING = true;
-                try {
+        try {
             vceListeners.fireVetoableChange("location", this.getLocProperty(),
                     initLoc);
         } catch (PropertyVetoException ex) {
             initLoc = new Coordinate(0,0);
+ 
         }
 
         LOC = initLoc;
-        timer.schedule(new SetLocationTimerTask(this), 1000, 1000);
+        timer.schedule(new SetLocationTimerTask(this), 100, 100);
         
     }
     

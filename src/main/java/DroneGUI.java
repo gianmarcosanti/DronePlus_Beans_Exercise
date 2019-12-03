@@ -19,8 +19,10 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Random;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 public class DroneGUI extends JLabel implements PropertyChangeListener {
     
@@ -28,7 +30,8 @@ public class DroneGUI extends JLabel implements PropertyChangeListener {
     private JPanel containingPanel;
 
     public DroneGUI(Drone d) {
-        super();
+        super("<0,0>");
+        this.setBorder(BorderFactory.createLineBorder(Color.BLUE, 5));
         this.drone = d;
         this.setForeground(randomColor());
         addMouseListener(new MouseAdapter() {
@@ -80,7 +83,7 @@ public class DroneGUI extends JLabel implements PropertyChangeListener {
 
     private void locationChanged(PropertyChangeEvent evt) {
         if (droneIsInPanelBounds()) {
-            this.setBounds(drone.getLocProperty().getX(), drone.getLocProperty().getY(), 100, 20);
+            this.setBounds(drone.getLocProperty().getX(), drone.getLocProperty().getY(), this.getText().length()*9, 10);
         }
         this.setText(">"
                     + drone.getLocProperty().getX()
@@ -102,6 +105,11 @@ public class DroneGUI extends JLabel implements PropertyChangeListener {
     }
 
     private boolean droneIsInPanelBounds() {
-        return containingPanel.contains(new Point(this.drone.getLocProperty().getX(), this.drone.getLocProperty().getY()));
+        Boolean xBounds = this.drone.getLocProperty().getX() > 0 && 
+                (this.drone.getLocProperty().getX() +this.getWidth()) < this.containingPanel.getWidth();
+        Boolean yBounds = this.drone.getLocProperty().getY() > 0 && 
+                (this.drone.getLocProperty().getY() + this.getHeight()) < this.containingPanel.getHeight();
+
+        return xBounds && yBounds;
     }
 }

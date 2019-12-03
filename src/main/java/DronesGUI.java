@@ -42,7 +42,7 @@ public class DronesGUI extends javax.swing.JFrame implements VetoableChangeListe
         }
             
         
-        if(!this.pnlDrones.contains(previewNewX, previewNewY))
+        if(!this.checkPositions(previewNewX, previewNewY))
             throw new PropertyVetoException("The drone is trying to escape the panel/n", evt);
 
     }
@@ -63,6 +63,21 @@ public class DronesGUI extends javax.swing.JFrame implements VetoableChangeListe
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 255, 0));
 
+        pnlDrones.setBackground(new java.awt.Color(204, 204, 204));
+        pnlDrones.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        pnlDrones.setSize(new java.awt.Dimension(300, 300));
+
+        javax.swing.GroupLayout pnlDronesLayout = new javax.swing.GroupLayout(pnlDrones);
+        pnlDrones.setLayout(pnlDronesLayout);
+        pnlDronesLayout.setHorizontalGroup(
+            pnlDronesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 616, Short.MAX_VALUE)
+        );
+        pnlDronesLayout.setVerticalGroup(
+            pnlDronesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         btnAdd.setText("Add Drone");
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -70,24 +85,28 @@ public class DronesGUI extends javax.swing.JFrame implements VetoableChangeListe
             }
         });
 
-        javax.swing.GroupLayout pnlDronesLayout = new javax.swing.GroupLayout(pnlDrones);
-        pnlDrones.setLayout(pnlDronesLayout);
-        pnlDronesLayout.setHorizontalGroup(
-            pnlDronesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDronesLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-        pnlDronesLayout.setVerticalGroup(
-            pnlDronesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDronesLayout.createSequentialGroup()
-                .addContainerGap(265, Short.MAX_VALUE)
-                .addComponent(btnAdd)
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(pnlDrones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-
-        getContentPane().add(pnlDrones, java.awt.BorderLayout.CENTER);
-        pnlDrones.getAccessibleContext().setAccessibleName("");
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 272, Short.MAX_VALUE))
+                    .addComponent(pnlDrones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -99,12 +118,14 @@ public class DronesGUI extends javax.swing.JFrame implements VetoableChangeListe
         
         newDrone.addPropertyChangeListener(droneGUI);
         newDrone.addVetoableChangeListener(this);
-        newDrone.takeOff(new Coordinate((int)(Math.random()*(200)+1),
-                (int)(Math.random()*(200)+1)));
+        newDrone.takeOff(new Coordinate((int)(Math.random()*(pnlDrones.getWidth())+1),
+                (int)(Math.random()*(pnlDrones.getHeight())+1)));
+        //newDrone.takeOff(new Coordinate(pnlDrones.getWidth(), pnlDrones.getHeight() - 21));
         pnlDrones.add(droneGUI);
         pnlDrones.revalidate();
         pnlDrones.repaint();
-               
+        System.out.println(pnlDrones.getWidth()+"\n");
+        System.out.print(pnlDrones.getHeight());
     }//GEN-LAST:event_btnAddActionPerformed
 
     /**
@@ -147,4 +168,12 @@ public class DronesGUI extends javax.swing.JFrame implements VetoableChangeListe
     private javax.swing.JButton btnAdd;
     private javax.swing.JPanel pnlDrones;
     // End of variables declaration//GEN-END:variables
+
+    private boolean checkPositions(Integer previewNewX, Integer previewNewY) {
+        Boolean xBounds = previewNewX > 0 && previewNewX + 
+                (previewNewX.toString().length() + previewNewY.toString().length() + 2)*9 < this.pnlDrones.getWidth();
+        Boolean yBounds = previewNewY > 0 && previewNewY< this.pnlDrones.getHeight();
+        
+        return xBounds && yBounds;
+    }
 }
